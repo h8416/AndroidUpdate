@@ -41,6 +41,9 @@ import cn.dcoder.autoupdate.utils.URLUtils;
  *
  */
 public class UpdateManager {
+
+    private static boolean isNextTime;
+
     private Context mContext;
     private String checkUrl;
     private boolean isAutoInstall;
@@ -115,34 +118,41 @@ public class UpdateManager {
      * 检查app是否有新版本，check之前先Builer所需参数
      */
     public void check() {
-        check(null);
+        check(null,false);
     }
 
-    public void check(OnUpdateListener listener) {
-        if (listener != null) {
-            this.updateListener = listener;
+    public void check(boolean isManualCheck){
+        check(null, isManualCheck);
+    }
+
+    public void check(OnUpdateListener listener, boolean isManualCheck) {
+        if(!isNextTime || isManualCheck) {
+
+            if (listener != null) {
+                this.updateListener = listener;
+            }
+            if (mContext == null) {
+                Log.e("NullPointerException", "The context must not be null.");
+                return;
+            }
+
+            ApplicationInfo info = null;
+            try {
+                info = mContext.getPackageManager().getApplicationInfo(
+                        mContext.getPackageName(), PackageManager.GET_META_DATA);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String param = info.metaData.getString("Update-Param");
+            if (param != null)
+                checkUrl = checkUrl + "?param=" + param;
+
+            Log.d("UpdateManager", "CheckURL:" + checkUrl);
+
+            AsyncCheck asyncCheck = new AsyncCheck();
+            asyncCheck.execute(checkUrl);
         }
-        if (mContext == null) {
-            Log.e("NullPointerException", "The context must not be null.");
-            return;
-        }
-
-        ApplicationInfo info = null;
-        try {
-           info = mContext.getPackageManager().getApplicationInfo(
-                    mContext.getPackageName(), PackageManager.GET_META_DATA);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        String param = info.metaData.getString("Update-Param");
-        if(param != null)
-            checkUrl = checkUrl + "?param=" + param;
-
-        Log.d("UpdateManager", "CheckURL:" + checkUrl);
-
-        AsyncCheck asyncCheck = new AsyncCheck();
-        asyncCheck.execute(checkUrl);
     }
 
     /**
@@ -190,6 +200,7 @@ public class UpdateManager {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            isNextTime = true;
                         }
                     });
         } else {
