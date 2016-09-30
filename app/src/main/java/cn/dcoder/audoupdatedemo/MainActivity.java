@@ -28,76 +28,6 @@ import cn.dcoder.autoupdate.UpdateManager;
 public class MainActivity extends AppCompatActivity {
     public int curr = 0;
 
-
-
-    public void httpTest(){
-    /*    Log.e("TEST",getPath());
-       // File[] files = getExternalFilesDirs(null);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url = null;
-                try {
-                    url = new URL("http://lab.dcoder.cn/test.mp3");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-
-                HttpURLConnection httpURLConnection = null;
-                try {
-
-                    httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.setConnectTimeout(8000);
-                    httpURLConnection.setReadTimeout(8000);
-                    //httpURLConnection.
-                    //Log.e("TEST", "LEN:" + httpURLConnection.getContentLength());
-                    final int size = httpURLConnection.getContentLength();
-
-                    InputStream in = httpURLConnection.getInputStream();
-
-                    File file = new File(getPath() + "/test.mp3");
-
-                    FileOutputStream fs = new FileOutputStream(file);
-
-                    byte[] buffer = new byte[10240];
-
-                    int len = 0;
-
-                    while((len = in.read(buffer)) != -1){
-                        fs.write(buffer, 0 , len);
-                        Log.d("TEST",len + " has been written");
-                        curr += len;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-                                progressBar.setProgress((int)(100.0 * curr / size));
-                            }
-                        });
-                    }
-
-                    Log.d("TEST","OVER");
-
-                    fs.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-
-            }
-        }).start();*/
-
-
-        try {
-            String url = this.getPackageManager().getApplicationInfo(this.getPackageName(), PackageManager.GET_META_DATA).metaData.getString("Update-Param");
-            Log.e("TEST",url);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,18 +40,7 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   /* httpTest();
-                    Log.e("TEST","CLICK");
-                    try {
-                        String url = MainActivity.this.getPackageManager().getApplicationInfo(MainActivity.this.getPackageName(), PackageManager.GET_META_DATA).metaData.getString("Update-Param");
-                        Log.e("TEST",url);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }*/
-                    UpdateManager updateManager = new UpdateManager.Builder(MainActivity.this)
-                            .checkUrl("http://lab.dcoder.cn/update.json")
-                            .build();
-                    updateManager.check();
+                    
                 }
             });
         }

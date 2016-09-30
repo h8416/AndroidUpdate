@@ -140,15 +140,15 @@ public class UpdateManager {
             try {
                 info = mContext.getPackageManager().getApplicationInfo(
                         mContext.getPackageName(), PackageManager.GET_META_DATA);
+                String param = info.metaData.getString("Update-Param");
+                if (param != null)
+                    checkUrl = checkUrl + "?param=" + param;
+
+                Log.d("UpdateManager", "CheckURL:" + checkUrl);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            String param = info.metaData.getString("Update-Param");
-            if (param != null)
-                checkUrl = checkUrl + "?param=" + param;
-
-            Log.d("UpdateManager", "CheckURL:" + checkUrl);
 
             AsyncCheck asyncCheck = new AsyncCheck();
             asyncCheck.execute(checkUrl);
