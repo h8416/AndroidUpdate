@@ -114,6 +114,10 @@ public class UpdateManager {
                 Context.MODE_PRIVATE);
     }
 
+    public static void init(){
+        isNextTime = false;
+    }
+
     /**
      * 检查app是否有新版本，check之前先Builer所需参数
      */
@@ -350,6 +354,7 @@ public class UpdateManager {
                 } else {
                     if (isHintVersion) {
                         Toast.makeText(mContext, "当前已是最新版", Toast.LENGTH_LONG).show();
+                        //isNextTime = true;
                     }
                     editor.putBoolean("hasNewVersion", false);
                 }
